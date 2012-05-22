@@ -1,12 +1,9 @@
 Meet4lunch::Application.routes.draw do
-  get "meet_static_pages/home"
+  root to: 'meet_static_pages#home'
 
-  get "meet_static_pages/help"
-  
-  get "meet_static_pages/about"
-  
-  get "meet_static_pages/contact"
-
+  match '/help',    to: 'meet_static_pages#help'
+  match '/about',   to: 'meet_static_pages#about'
+  match '/contact', to: 'meet_static_pages#contact'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
