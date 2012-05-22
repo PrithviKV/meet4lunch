@@ -1,4 +1,8 @@
 Meet4lunch::Application.routes.draw do
+  get "meet_static_pages/home"
+
+  get "meet_static_pages/help"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
