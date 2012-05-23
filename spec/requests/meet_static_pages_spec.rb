@@ -3,61 +3,35 @@ require 'spec_helper'
 describe "Static pages" do
 
   describe "Home page" do
-
-    it "should have the h1 'Welcome'" do
-      visit '/meet_static_pages/home'
-      page.should have_selector('h1', :text => 'Welcome')
-    end
-
-    it "should have the base title" do
-      visit '/meet_static_pages/home'
-      page.should have_selector('title',
-                        :text => "Meet4Lunch")
-    end
-	it "should not have a custom page title" do
-      visit '/meet_static_pages/home'
-      page.should_not have_selector('title', :text => '| Home')
-    end
+    before{ visit root_path}
+    it { should have_selector('h1', text: 'Welcome') }
+    it { should have_selector('title',
+	                             text: full_title('')) }
+    it { should_not have_selector('title', text:  '| Home') }
+    
   end
 
   describe "Help page" do
-
-    it "should have the h1 'Help'" do
-      visit '/meet_static_pages/help'
-      page.should have_selector('h1', :text => 'Help')
-    end
-
-    it "should have the title 'Help'" do
-      visit '/meet_static_pages/help'
-      page.should have_selector('title',
-                        :text => " Meet4Lunch | Help")
-    end
+    before{ visit help_path }
+    it { should have_selector('h1', text: 'Help')}
+    it { should have_selector('title',
+                        text : full_title('Help'))}
+ 
   end
 
   describe "About page" do
-
-    it "should have the h1 'About Us'" do
-      visit '/meet_static_pages/about'
-      page.should have_selector('h1', :text => 'About Us')
+    before{ visit about_path }
+    it { should have_selector('h1', text: 'About Us')}
+    it { should have_selector('title',
+                    text: full_title('About Us'))}
     end
 
-    it "should have the title 'About Us'" do
-      visit '/meet_static_pages/about'
-      page.should have_selector('title',
-                    :text => "Meet4Lunch | About Us")
-    end
-  end
   
   describe "Contact page" do
-
-    it "should have the h1 'Contact'" do
-      visit contact_path
-      page.should have_selector('h1', :text => 'Contact')
-    end
-
-    it "should have the title 'Contact'" do
-      visit contact_path
-      page.should have_selector('title', :text => "Meet4Lunch | Contact")
-    end
+    before{ visit contact_path }
+    it { should have_selector('h1', text: 'Contact')}
+    it { should have_selector('title',
+                    text: full_title('Contact'))}
+   
   end
 end
