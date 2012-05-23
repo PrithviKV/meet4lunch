@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-Name: %peptic.pluginName
+Bundle-ClassPath: refactoring.jar,retroweaver-rt.jar
+Bundle-Activator: org.python.pydev.refactoring.PepticPlugin
+Bundle-Vendor: %peptic.providerName
+Bundle-ManifestVersion: 2
+Bundle-Localization: plugin
+Bundle-SymbolicName: org.python.pydev.refactoring;singleton:=true
+Export-Package: org.python.pydev.refactoring,org.python.pydev.refactor
+ ing.core.base,org.python.pydev.refactoring.core.change,org.python.pyd
+ ev.refactoring.core.edit,org.python.pydev.refactoring.core.request,or
+ g.python.pydev.refactoring.ui.actions,org.python.pydev.refactoring.ui
+ .actions.internal
+Require-Bundle: org.eclipse.ui,org.eclipse.core.runtime,org.python.pyd
+ ev.core,org.python.pydev.parser,org.eclipse.ltk.core.refactoring,org.
+ eclipse.ltk.ui.refactoring,org.eclipse.core.resources,org.eclipse.jfa
+ ce.text,org.eclipse.ui.ide,org.eclipse.ui.workbench.texteditor,org.ec
+ lipse.ui.editors,org.python.pydev;bundle-version="1.5.5.2010030420",o
+ rg.python.pydev.jython,org.eclipse.compare
+Bundle-Version: 1.5.5.2010030420
+Eclipse-LazyStart: true
+
+

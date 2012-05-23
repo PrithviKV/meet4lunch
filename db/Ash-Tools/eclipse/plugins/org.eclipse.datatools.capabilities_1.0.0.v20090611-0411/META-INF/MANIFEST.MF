@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.1
+Created-By: 2.3 (IBM Corporation)
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-SymbolicName: org.eclipse.datatools.capabilities;singleton:=tru
+ e
+Bundle-Activator: org.eclipse.datatools.capabilities.Activator
+Bundle-ManifestVersion: 2
+Bundle-Localization: plugin
+Bundle-Name: %pluginName
+Bundle-Version: 1.0.0.v20090611-0411
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: %providerName
+Require-Bundle: org.eclipse.ui;bundle-version="[3.5.0,4.0.0)",org.ecli
+ pse.core.runtime;bundle-version="[3.5.0,4.0.0)"
+

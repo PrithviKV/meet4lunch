@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.jst.web_ui.feature"
+      label="%featureName"
+      version="3.1.1.v200908121609-7E77FBiDlwYcICNdz-5z-9PGqZCy"
+      provider-name="%providerName">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
+   </url>
+
+   <includes
+         id="org.eclipse.jst.web_userdoc.feature"
+         version="3.1.0.v200809240655-20A77w311A17263135"/>
+
+   <includes
+         id="org.eclipse.jst.web_core.feature"
+         version="3.1.1.v200908121609-7S7CG-dFIhIeq7kV6qxaLD"/>
+
+   <plugin
+         id="org.eclipse.wst.jsdt.web.support.jsp"
+         download-size="0"
+         install-size="0"
+         version="1.0.200.v200904140255"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jst.common.annotations.ui"
+         download-size="0"
+         install-size="0"
+         version="1.1.102.v200806010600"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jst.jsp.ui"
+         download-size="0"
+         install-size="0"
+         version="1.1.401.v200908111935"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jst.jsp.ui.infopop"
+         download-size="0"
+         install-size="0"
+         version="1.0.100.v200805301545"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jst.jsf.common.ui"
+         download-size="0"
+         install-size="0"
+         version="1.1.1.v20081209"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jst.jsf.facesconfig.ui"
+         download-size="0"
+         install-size="0"
+         version="1.1.6.v20100203"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jst.jsf.ui"
+         download-size="0"
+         install-size="0"
+         version="1.2.3.v201001271707"
+         unpack="false"/>
+
+</feature>

@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-Name: Parser Plug-in
+Bundle-ClassPath: parser.jar,retroweaver-rt.jar
+Bundle-Activator: org.python.pydev.parser.ParserPlugin
+Bundle-ManifestVersion: 2
+Bundle-Localization: plugin
+Bundle-SymbolicName: org.python.pydev.parser; singleton:=true
+Export-Package: org.python.pydev.parser,org.python.pydev.parser.fastpa
+ rser,org.python.pydev.parser.grammar24,org.python.pydev.parser.gramma
+ r25,org.python.pydev.parser.grammar26,org.python.pydev.parser.grammar
+ 30,org.python.pydev.parser.grammarcommon,org.python.pydev.parser.jyth
+ on,org.python.pydev.parser.jython.ast,org.python.pydev.parser.prettyp
+ rinter,org.python.pydev.parser.prettyprinterv2,org.python.pydev.parse
+ r.visitors,org.python.pydev.parser.visitors.comparator,org.python.pyd
+ ev.parser.visitors.scope
+Require-Bundle: org.junit;bundle-version="[3.8.0,3.9.9]";resolution:=o
+ ptional,org.eclipse.ui,org.eclipse.ui.ide,org.eclipse.core.runtime,or
+ g.eclipse.core.resources,org.eclipse.jface.text,org.python.pydev.core
+ ,org.eclipse.ui.editors,org.eclipse.ui.workbench.texteditor
+Bundle-Version: 1.5.5.2010030420
+Eclipse-LazyStart: true
+
+

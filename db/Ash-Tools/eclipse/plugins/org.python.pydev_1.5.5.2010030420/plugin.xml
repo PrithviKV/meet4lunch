@@ -1,0 +1,1429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+<!-- Python editor -->
+   <extension point="org.eclipse.ui.editors">
+      <editor
+            class="org.python.pydev.editor.PyEdit"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="py,pyw"
+            icon="icons/python_file.gif"
+            id="org.python.pydev.editor.PythonEditor"
+            name="Python Editor">
+      </editor>
+   </extension>
+<!-- Initialize our preferences -->
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.python.pydev.builder.pylint.PyLintPrefInitializer"/>
+      <initializer class="org.python.pydev.plugin.preferences.PydevPrefsInitializer"/>
+      <initializer class="org.python.pydev.editor.codecompletion.PyCodeCompletionInitializer"/>
+   </extension>
+<!-- document provider (even for the external files) -->
+   <extension point="org.eclipse.ui.editors.documentProviders">
+      <provider
+            class="org.python.pydev.editor.PyDocumentProvider"
+            id="org.python.pydev.editorinput.PydevFileEditorInput"
+            inputTypes="org.python.pydev.editorinput.PydevFileEditorInput"/>
+      <provider
+            class="org.python.pydev.editor.PyDocumentProvider"
+            id="org.python.pydev.editor.PyDocumentProvider"
+            extensions=".py,.pyw"/>
+   </extension>
+   <extension
+         id="PyDocumentSetupParticipant"
+         point="org.eclipse.core.filebuffers.documentSetup">
+      <participant
+            class="org.python.pydev.editor.PyDocumentSetupParticipant"
+            extensions="py,pyw"/>
+   </extension>
+<!-- Python file content type (so that it is regarded as text) -->
+  <extension point="org.eclipse.core.runtime.contentTypes">
+      <content-type
+            file-extensions="py,pyw"
+            name="Python File"
+            id="pythonfile"
+            base-type="org.eclipse.core.runtime.text"/>
+   </extension>
+   
+   <!-- new way of handling the content type -->
+  <extension point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            file-extensions="py,pyw"
+            name="Python File"
+            id="org.python.pydev.pythonfile"
+            base-type="org.eclipse.core.runtime.text"/>
+   </extension>
+   
+
+<!-- Python nature -->
+   <extension
+         id="pythonNature"
+         name="Python Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.python.pydev.plugin.nature.PythonNature">
+         </run>
+      </runtime>
+      <builder id="org.python.pydev.builder"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/pythonNature.gif"
+            natureId="org.python.pydev.pythonNature"
+            id="org.python.pydev.ui.projectNatureImage">
+      </image>
+   </extension>
+   
+   
+   
+<!-- Pydev project properties -->
+   <extension point="org.eclipse.ui.propertyPages">
+      <page name="PyDev - PYTHONPATH"
+            class="org.python.pydev.ui.PyProjectProperties"
+            id="org.python.pydev.ui.pyProjectProperties">
+         <filter name="projectNature"
+               value="org.python.pydev.pythonNature"/>
+         <enabledWhen>
+            <adapt type="org.eclipse.core.resources.IProject"/>
+         </enabledWhen>
+      </page>
+   </extension>
+   <extension point="org.eclipse.ui.propertyPages">
+         
+      <page name="PyDev - Interpreter/Grammar"
+            class="org.python.pydev.ui.PyProjectPythonDetails"
+            id="org.python.pydev.ui.pyProjectPythonDetails">
+         <filter name="projectNature" value="org.python.pydev.pythonNature"/>
+         <enabledWhen>
+            <adapt type="org.eclipse.core.resources.IProject"/>
+         </enabledWhen>
+      </page>
+   </extension>
+   
+   
+<!-- Pydev nature/project related actions -->
+   <extension point="org.eclipse.ui.popupMenus">
+   
+      <!-- remove .pyc -->
+      <objectContribution
+            adaptable="true"
+            id="org.python.pydev.ui.actions.container.pyDeletePycAndClassFiles"
+            objectClass="org.eclipse.core.resources.IContainer">
+         <menu id="org.python.pydev.ui.actions.menu" label="Pydev"/>
+         <action
+               class="org.python.pydev.ui.actions.container.PyDeletePycAndClassFiles"
+               enablesFor="+"
+               id="org.python.pydev.ui.actions.container.pyDeletePycAndClassFiles"
+               label="Remove *.pyc, *.pyo and *$py.class Files"
+               menubarPath="org.python.pydev.ui.actions.menu/pydev"
+               tooltip="Removes all the .pyc, .pyo and $.py.class files.">
+         </action>
+      </objectContribution>
+      
+      <!-- Code Formatting -->
+      <objectContribution
+            adaptable="true"
+            id="org.python.pydev.ui.actions.container.pySourceFormatAction"
+            objectClass="org.eclipse.core.resources.IContainer">
+         <menu id="org.python.pydev.ui.actions.menu" label="Pydev"/>
+         <action
+               class="org.python.pydev.ui.actions.container.PySourceFormatAction"
+               enablesFor="+"
+               id="org.python.pydev.ui.actions.container.pySourceFormatAction"
+               label="Source format python files"
+               menubarPath="org.python.pydev.ui.actions.menu/pydev"
+               tooltip="Applies the code-formatting to the selected python files.">
+         </action>
+      </objectContribution>
+      
+      <!-- remove errors -->
+      <objectContribution
+            adaptable="true"
+            id="org.python.pydev.ui.actions.container.pyDeleteErrors"
+            objectClass="org.eclipse.core.resources.IContainer">
+         <menu id="org.python.pydev.ui.actions.menu" label="Pydev"/>
+         <action
+               class="org.python.pydev.ui.actions.container.PyDeleteErrors"
+               enablesFor="+"
+               id="org.python.pydev.ui.actions.container.pyDeleteErrors"
+               label="Remove error markers"
+               menubarPath="org.python.pydev.ui.actions.menu/pydev"
+               tooltip="Remove error markers">
+         </action>
+      </objectContribution>
+      
+      
+      <!-- remove nature -->
+      <objectContribution
+            adaptable="true"
+            id="org.python.pydev.ui.actions.project.PyRemoveNature"
+            objectClass="org.eclipse.core.resources.IProject">
+         <menu id="org.python.pydev.ui.actions.menu" label="Pydev"/>
+         <action
+               class="org.python.pydev.ui.actions.project.PyRemoveNature"
+               enablesFor="1"
+               icon="icons/remove_nature.png"
+               id="org.python.pydev.ui.actions.project.pyRemoveNature"
+               label="Remove Pydev Project Config"
+               menubarPath="org.python.pydev.ui.actions.menu/pydev"
+               tooltip="Remove the Pydev project configuration">
+         </action>
+         <visibility><objectState name="projectNature" value="org.python.pydev.pythonNature"/></visibility>
+      </objectContribution>
+      
+      
+      <!-- add nature -->
+      <objectContribution
+            adaptable="true"
+            id="org.python.pydev.ui.actions.project.PyAddNature"
+            objectClass="org.eclipse.core.resources.IProject">
+         <menu id="org.python.pydev.ui.actions.menu" label="Pydev"/>
+         <action
+               class="org.python.pydev.ui.actions.project.PyAddNature"
+               enablesFor="1"
+               icon="icons/python_nature.png"
+               id="org.python.pydev.ui.actions.project.pyAddNature"
+               label="Set as Pydev Project"
+               menubarPath="org.python.pydev.ui.actions.menu/pydev"
+               tooltip="Set project as a Pydev project">
+         </action>
+         <visibility><not><objectState name="projectNature" value="org.python.pydev.pythonNature"/></not></visibility>
+      </objectContribution>
+      
+      
+   </extension>
+   
+<!-- Preferences Keywords -->
+	<extension point="org.eclipse.ui.keywords" name="Interpreter Keywords">
+	    <keyword id="org.python.pydev.interpreter.keywords"  label="forced builtins pythonpath"/>
+	</extension>    
+	<extension point="org.eclipse.ui.keywords" name="Pydev Preferences">
+	    <keyword id="org.python.pydev.preferences.keywords"  label="tabs spaces colors folding"/>
+	</extension>    
+
+<!-- Preference page -->
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+            name="Pydev"
+            class="org.python.pydev.plugin.preferences.PydevRootPrefs"
+            id="org.python.pydev.prefs">
+      </page>
+      <page
+            name="Logging"
+            category="org.python.pydev.prefs"
+            class="org.python.pydev.logging.PyLoggingPreferencesPage"
+            id="org.python.pydev.logging.pyLoggingPreferencesPage">
+      </page>
+      <page
+            name="Editor"
+            class="org.python.pydev.editor.preferences.PydevEditorPrefs"
+            category="org.python.pydev.prefs"
+            id="org.python.pydev.prefs.editor">
+            <keywordReference id="org.python.pydev.preferences.keywords"/>
+      </page>
+      <page
+            name="Typing"
+            category="org.python.pydev.prefs.editor"
+            class="org.python.pydev.editor.preferences.PydevTypingPrefs"
+            id="org.python.pydev.prefs2">
+      </page>
+      <page
+            name="Interpreter - Python"
+            category="org.python.pydev.prefs"
+            class="org.python.pydev.ui.pythonpathconf.PythonInterpreterPreferencesPage"
+            id="org.python.pydev.ui.pythonpathconf.interpreterPreferencesPagePython">
+            <keywordReference id="org.python.pydev.interpreter.keywords"/>
+      </page>
+      <page
+            name="Interpreter - Jython"
+            category="org.python.pydev.prefs"
+            class="org.python.pydev.ui.pythonpathconf.JythonInterpreterPreferencesPage"
+            id="org.python.pydev.ui.pythonpathconf.interpreterPreferencesPageJython">
+	        <keywordReference
+	            id="org.python.pydev.interpreter.keywords">
+	        </keywordReference>
+      </page>
+      <page
+            name="Interpreter - Iron Python"
+            category="org.python.pydev.prefs"
+            class="org.python.pydev.ui.pythonpathconf.IronpythonInterpreterPreferencesPage"
+            id="org.python.pydev.ui.pythonpathconf.interpreterPreferencesPageIronpython">
+	        <keywordReference
+	            id="org.python.pydev.interpreter.keywords">
+	        </keywordReference>
+      </page>
+      <page
+      		name="Pyunit"
+            category="org.python.pydev.prefs"
+            class="org.python.pydev.pyunit.preferences.PyunitPrefsPage"
+            id="org.python.pydev.prefs.pyunitPage"/>
+      <page
+            name="Code Style"
+            category="org.python.pydev.prefs.editor"
+            class="org.python.pydev.plugin.preferences.PyCodeStylePreferencesPage"
+            id="org.python.pydev.plugin.pyCodeStylePreferencesPage"/>
+            
+      <page
+            name="Code Formatter"
+            category="org.python.pydev.plugin.pyCodeStylePreferencesPage"
+            class="org.python.pydev.plugin.preferences.PyCodeFormatterPage"
+            id="org.python.pydev.plugin.pyCodeFormatterPage"/>
+      <page
+      		name="Docstrings"
+            category="org.python.pydev.plugin.pyCodeStylePreferencesPage"
+            class="org.python.pydev.editor.correctionassist.docstrings.DocstringsPrefPage"
+            id="org.python.pydev.editor.correctionassist.docstrings.DocstringsPreferencePage"/>
+
+      <page
+      		name="Block Comments"
+            category="org.python.pydev.plugin.pyCodeStylePreferencesPage"
+            class="org.python.pydev.editor.commentblocks.CommentBlocksPreferences"
+            id="org.python.pydev.editor.commentblocks.CommentBlocksPreferences"/>
+
+      <page
+      		name="File types"
+            category="org.python.pydev.plugin.pyCodeStylePreferencesPage"
+            class="org.python.pydev.ui.filetypes.FileTypesPreferencesPage"
+            id="org.python.pydev.ui.filetypes.FileTypesPreferencesPage"/>
+
+      <page
+      		name="Imports"
+            category="org.python.pydev.plugin.pyCodeStylePreferencesPage"
+            class="org.python.pydev.ui.importsconf.ImportsPreferencesPage"
+            id="org.python.pydev.ui.importsconf.ImportsPreferencesPage"/>
+
+      <page
+            name="Code Completion"
+            class="org.python.pydev.editor.codecompletion.PyCodeCompletionPreferencesPage"
+            category="org.python.pydev.prefs.editor"
+            id="org.python.pydev.prefs.PyCodeCompletionPage"/>
+      <page
+            name="Hover"
+            class="org.python.pydev.editor.hover.PyHoverPreferencesPage"
+            category="org.python.pydev.prefs.editor"
+            id="org.python.pydev.editor.hover.PyHoverPreferencesPage"/>
+      <page
+            name="Templates"
+            class="org.python.pydev.editor.templates.PyTemplatePreferencesPage"
+            category="org.python.pydev.prefs.editor"
+            id="org.python.pydev.prefs.template"/>
+      <page
+            class="org.python.pydev.builder.pylint.PyLintPrefPage"
+            category="org.python.pydev.prefs"
+            name="Pylint"
+            id="org.python.pydev.prefs.pylint"/>
+      <page
+            class="org.python.pydev.builder.todo.PyTodoPrefPage"
+            category="org.python.pydev.prefs"
+            name="Task Tags"
+            id="org.python.pydev.prefs.pytodo"/>
+      <page
+            name="Builders"
+            category="org.python.pydev.prefs"
+            class="org.python.pydev.builder.PyDevBuilderPrefPage"
+            id="org.python.pydev.builder.pyDevBuilderPrefPage">
+      </page>
+      <page
+            category="org.python.pydev.prefs.editor"
+            class="org.python.pydev.editor.codefolding.PyDevCodeFoldingPrefPage"
+            id="org.python.pydev.editor.codefolding.PyDevCodeFoldingPrefPage"
+            name="Code Folding">
+      </page>
+   </extension>
+<!-- Editor menus -->
+   <extension point="org.eclipse.ui.editorActions" 
+   		      name="pydevEditorContribution"
+   		      id="org.python.pydev.editorContribution">
+      <editorContribution
+            targetID="org.python.pydev.editor.PythonEditor"
+            id="org.python.pydev.editor.editorContribution">
+         <menu
+               label="&amp;Source"
+               path="edit"
+               id="org.python.pydev.editor.actions.sourceMenu">
+            <separator name="editGroup"/>
+            <separator name="addGroup"/>
+            <separator name="whitespaceGroup"/>
+            <separator name="evaluateGroup"/>
+         </menu>
+         <menu
+               id="org.python.pydev.refactoring.refactoringMenu"
+               label="Refac&amp;toring"
+               path="org.python.pydev.editor.actions.sourceMenu">
+            <separator name="brmGroup"/>
+         </menu>
+         <action
+               definitionId="org.python.pydev.editor.actions.firstChar"
+               label="Goto first char"
+               class="org.python.pydev.editor.actions.FirstCharAction"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/editGroup"
+               id="org.python.pydev.editor.actions.firstChar">
+         </action>
+         <!-- Backspace now handled in VerifyKey (incremental find integration)
+         <action
+               definitionId="org.python.pydev.editor.actions.pybackspace"
+               label="Python Backspace (considers indentation)"
+               class="org.python.pydev.editor.actions.PyBackspace"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/editGroup"
+               id="org.python.pydev.editor.actions.pybackspace">
+         </action>
+         -->
+         <action
+               definitionId="org.python.pydev.editor.actions.convertSpaceToTab"
+               label="Convert space-tabs to tabs"
+               class="org.python.pydev.editor.actions.PyConvertSpaceToTab"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/whitespaceGroup"
+               id="org.python.pydev.editor.actions.convertSpaceToTab">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.convertTabToSpace"
+               label="Convert tabs to space-tabs"
+               class="org.python.pydev.editor.actions.PyConvertTabToSpace"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/whitespaceGroup"
+               id="org.python.pydev.editor.actions.convertTabToSpace">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.uncomment"
+               label="Uncomment"
+               class="org.python.pydev.editor.actions.PyUncomment"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/editGroup"
+               id="org.python.pydev.editor.actions.uncomment">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.comment"
+               label="Comment"
+               class="org.python.pydev.editor.actions.PyComment"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/editGroup"
+               id="org.python.pydev.editor.actions.comment">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.togglecomment"
+               label="Toggle Comment"
+               class="org.python.pydev.editor.actions.PyToggleComment"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/editGroup"
+               id="org.python.pydev.editor.actions.togglecomment">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.removeBlockComment"
+               label="Remove comment block"
+               class="org.python.pydev.editor.actions.PyRemoveBlockComment"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.removeBlockComment">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.addBlockComment"
+               label="Add comment block"
+               class="org.python.pydev.editor.actions.PyAddBlockComment"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.addBlockComment">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.addSingleBlockComment"
+               label="Add single comment block"
+               class="org.python.pydev.editor.actions.PyAddSingleBlockComment"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.addSingleBlockComment">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.navigation.nextMethod"
+               label="Goto next method or class"
+               class="org.python.pydev.editor.actions.PyNextMethod"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.navigation.nextMethod">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.navigation.previousMethod"
+               label="Goto previous method or class"
+               class="org.python.pydev.editor.actions.PyPreviousMethod"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.navigation.previousMethod">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.navigation.pyCollapse"
+               label="Collapse code"
+               class="org.python.pydev.editor.actions.codefolding.PyCollapse"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.navigation.pyCollapse">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.navigation.pyUnCollapse"
+               label="Un Collapse code"
+               class="org.python.pydev.editor.actions.codefolding.PyUnCollapse"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.navigation.pyUnCollapse">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.navigation.pyCollapseAll"
+               label="Collapse code (All)"
+               class="org.python.pydev.editor.actions.codefolding.PyCollapseAll"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.navigation.pyCollapseAll">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.navigation.pyUnCollapseAll"
+               label="Un Collapse code (All)"
+               class="org.python.pydev.editor.actions.codefolding.PyUnCollapseAll"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.navigation.pyUnCollapseAll">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.pyShowOutline"
+               label="Show Quick Outline"
+               class="org.python.pydev.editor.actions.PyShowOutline"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.navigation.pyShowOutline">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.pyShowBrowser"
+               label="Show Class Browser"
+               class="org.python.pydev.editor.actions.PyShowBrowser"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.navigation.pyShowBrowser">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.pyOrganizeImports"
+               label="Organize Imports"
+               class="org.python.pydev.editor.actions.PyOrganizeImports"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.navigation.pyOrganizeImports">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.pyFormatStd"
+               label="Format Code"
+               class="org.python.pydev.editor.actions.PyFormatStd"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.navigation.pyFormatStd">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.pySelectWord"
+               label="Select the current word"
+               class="org.python.pydev.editor.actions.PySelectWord"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.pySelectWord">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.wrapparagraph"
+               label="Wrap paragraph (Ctrl+2,w)"
+               class="org.python.pydev.editor.actions.PyWrapParagraph"
+               menubarPath="org.python.pydev.editor.actions.sourceMenu/addGroup"
+               id="org.python.pydev.editor.actions.wrapparagraph">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.copyqualifiedname"
+               label="Copy Context Qualified Name"
+               class="org.python.pydev.editor.actions.PyCopyQualifiedName"
+               menubarPath="edit/copy"
+               id="org.python.pydev.editor.actions.copyqualifiedname"
+               icon="icons/cpyqual_menu.gif">
+         </action>
+         <action
+               definitionId="org.python.pydev.editor.actions.goToMatchingBracket"
+               label="Go to Matching Bracket"
+               class="org.python.pydev.editor.actions.PyGoToMatchingBracket"
+               id="org.python.pydev.editor.actions.goToMatchingBracket">
+         </action>
+      </editorContribution>
+   </extension>
+
+
+<!-- Editor Context (formerly scope) -->
+    <extension point="org.eclipse.ui.contexts">
+      <context
+            name="Pydev editor scope"
+            parentId="org.eclipse.ui.textEditorScope"
+            description="Pydev commands"
+            id="org.python.pydev.ui.editor.scope">
+      </context>
+    </extension>
+<!-- associates commands with keyboard shortcuts -->
+<!-- Commands -->    
+    <extension point="org.eclipse.ui.commands">
+
+<!--category: Editor Commands-->
+      <category
+            name="Pydev - Editor"
+            description="Pydev editor category"
+            id="org.python.pydev.ui.category.source">
+      </category>
+<!--category: Refactor-->
+      <category
+            name="Pydev - Refactor"
+            description="Python refactor category"
+            id="org.python.pydev.ui.category.refactoring"> 
+      </category>
+    
+<!-- command: goto first char-->
+      <command
+            description="Goes to the first non space char or first char of the line depending on the cursor position."
+            id="org.python.pydev.editor.actions.firstChar"
+            categoryId="org.python.pydev.ui.category.source"
+            name="First char">
+      </command>
+<!-- command: backspace considering indentation-->
+<!-- Backspace now handled in VerifyKey (incremental find integration)
+      <command
+            description="Backspace considering indentation for Python."
+            id="org.python.pydev.editor.actions.pybackspace"
+            categoryId="org.python.pydev.ui.category.source"
+            name="Python Backspace (with indentation)">
+      </command>
+-->
+<!-- command: next method / class-->
+      <command
+            name="Next Method or Class"
+            description="Navigates to the next method or class definition"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.navigation.nextMethod">
+      </command>
+<!-- command: previous method / class-->
+      <command
+            name="Previous Method or Class"
+            description="Navigates to the previous method or class definition"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.navigation.previousMethod">
+      </command>
+<!-- command: space to tab-->
+      <command
+            name="Convert space-tabs to tabs"
+            description="Converts tab-width space groups to tabs from selected region or whole document if nothing selected"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.convertSpaceToTab">
+      </command>
+<!-- command: tab to space-->
+      <command
+            name="Convert tabs to space-tabs"
+            description="Converts tabs to tab-width space groups from selected region or whole document if nothing selected"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.convertTabToSpace">
+      </command>
+<!-- command: unblock-->
+      <command
+            name="Remove Comment Block"
+            description="Removes a python comment block"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.removeBlockComment">
+      </command>
+<!-- command: block-->
+      <command
+            name="Add Comment Block"
+            description="Creates a python comment block"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.addBlockComment">
+      </command>
+<!-- command: block-->
+      <command
+            name="Add Single Comment Block"
+            description="Creates a comment block from a single line"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.addSingleBlockComment">
+      </command>
+<!-- command: uncomment-->
+      <command
+            name="Python Uncomment"
+            description="Uncomments a python line (Removes # from the beggining of the line)"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.uncomment">
+      </command>
+<!-- command: comment-->
+      <command
+            name="Python Comment"
+            description="Comments a python line (Adds # to beggining of the line)"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.comment">
+      </command>
+<!-- command: toggle comment-->
+      <command
+            name="Python Toggle Comment"
+            description="Toggles comments of python line/s (Adds/Removes # at beggining of the line)"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.togglecomment">
+      </command>
+<!-- command: Collapse-->
+      <command
+            name="Python Collapse"
+            description="Collapse block of code"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.navigation.pyCollapse">
+      </command>
+<!-- command: Un Collapse-->
+      <command
+            name="Python Un Collapse"
+            description="Un Collapse block of code"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.navigation.pyUnCollapse">
+      </command>
+<!-- command: Collapse All-->
+      <command
+            name="Python Collapse All"
+            description="Collapse all blocks of code"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.navigation.pyCollapseAll">
+      </command>
+<!-- command: Un Collapse-->
+      <command
+            name="Python Un Collapse All"
+            description="Un Collapse all blocks of code"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.navigation.pyUnCollapseAll">
+      </command>
+<!-- command: Show outline-->
+      <command
+            name="Python Show Outline"
+            description="Show Outline"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.pyShowOutline">
+      </command>
+<!-- command: Show browser-->
+      <command
+            name="Python Show Class Browser"
+            description="Show Class Browser"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.pyShowBrowser">
+      </command>
+<!-- command: Organize Imports-->
+      <command
+            name="Python Organize Imports"
+            description="Organize Imports"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.pyOrganizeImports">
+      </command>
+<!-- command: Format code-->
+      <command
+            name="Python Format Code"
+            description="Format Code"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.pyFormatStd">
+      </command>
+<!-- command: Select Word-->
+      <command
+            name="Select Word"
+            description="Select the whole word"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.pySelectWord">
+      </command>
+<!-- command: wrap paragraph-->
+      <command
+            name="Wrap Paragraph (Ctrl+2,w)"
+            description="Wraps the current paragraph"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.wrapparagraph">
+      </command>
+<!-- command: Copy Context Qualified Name-->
+      <command
+            name="Copy Context Qualified Name"
+            description="Copies the Path of the selected context"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.copyqualifiedname">
+      </command>
+  <!-- Offline Command -->
+      <command
+            name="Offline Action for scripting"
+            description="Offline Action for scripting"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.scriptEngine"/>
+  <!-- Go to matching bracket -->
+      <command
+            name="Go to Matching Bracket"
+            description="Go to Matching Bracket"
+            categoryId="org.python.pydev.ui.category.source"
+            id="org.python.pydev.editor.actions.goToMatchingBracket"/>
+   </extension>
+            
+   <extension point="org.eclipse.ui.bindings">
+      <!-- 
+      Note:
+      M1=Ctrl 
+      M2=Shift 
+      M3=Alt 
+      -->
+      <key
+            sequence="HOME"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.firstChar"    
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <!--TODO: guessing at name "BACKSPACE, needs verification -->
+      <!-- Backspace now handled in VerifyKey (incremental find integration)
+      <key
+            sequence="BACKSPACE"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.pybackspace"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      -->
+      <key
+            sequence="M1+M2+Arrow_Up"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.navigation.previousMethod"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+5"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.removeBlockComment"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+4"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.addBlockComment"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+M2+4"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.addSingleBlockComment"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+\"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.uncomment"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+M2+3"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.uncomment"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+M2+Arrow_Down"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.navigation.nextMethod"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+/"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.togglecomment"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+3"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.comment"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+-"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.navigation.pyCollapse"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+="
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.navigation.pyUnCollapse"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+9"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.navigation.pyCollapseAll"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+0"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.navigation.pyUnCollapseAll"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+O"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.pyShowOutline"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+M2+T"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.pyShowBrowser"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+M2+O"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.pyOrganizeImports"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+M2+F"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.pyFormatStd"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+2"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.scriptEngine"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+      <key
+            sequence="M1+M2+P"
+            contextId="org.python.pydev.ui.editor.scope"
+            commandId="org.python.pydev.editor.actions.goToMatchingBracket"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+   </extension>
+
+
+
+
+<!-- file type extensions for the team (CVS) -->
+   <extension point="org.eclipse.team.core.fileTypes">
+      <fileTypes type="text" extension="py"/>
+      <fileTypes type="text" extension="pyw"/>
+   </extension>
+   <extension point="org.eclipse.team.core.ignore">
+      <ignore enabled="true" pattern="*.pyc"/>
+      <ignore enabled="true" pattern="*.class"/>
+      <ignore enabled="true" pattern="*.pyo"/>
+   </extension>
+<!-- filter out .pyc files in the navigation view -->
+   <extension
+         point="org.eclipse.ui.ide.resourceFilters">
+      <filter selected="True" pattern="*.pyc"/>
+      <filter selected="True" pattern="*.class"/>
+      <filter selected="True" pattern="*.pyo"/>
+   </extension>
+<!-- add quick-fixes (does nothing right now) -->
+    <extension
+         point="org.eclipse.ui.ide.markerResolution">
+      <markerResolutionGenerator
+            class="org.python.pydev.editor.correctionassist.PyQuickFix"
+            markerType="org.eclipse.core.resources.problemmarker"/>
+    </extension>
+<!-- Builder for pydev -->
+    <extension
+         id="PyDevBuilder"
+         name="Pydev Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder>
+         <run class="org.python.pydev.builder.PyDevBuilder"/>
+      </builder>
+    </extension>
+<!-- Communicate pylint problems as markers -->
+    <extension 
+        point="org.eclipse.core.resources.markers"
+        name="PyLint Problem"
+        id="pylintproblemmarker">
+       <super type="org.eclipse.core.resources.problemmarker"/>
+       <persistent value="true"/>
+    </extension>
+<!-- Markers for the pydev package explorer -->
+    <extension 
+        point="org.eclipse.core.resources.markers"
+        name="Pydev Project Error"
+        id="PydevProjectErrorMarkers">
+       <super type="org.eclipse.core.resources.problemmarker"/>
+       <persistent value="false"/>
+    </extension>
+<!-- templates -->
+    <extension point="org.eclipse.ui.editors.templates">
+         <contextType
+               class="org.python.pydev.editor.templates.PyContextType"
+               id="org.python.pydev.editor.templates.python"
+               name="Editor"/>
+         <contextType
+               class="org.python.pydev.editor.templates.PyContextType"
+               id="org.python.pydev.editor.templates.python.modules"
+               name="New Module"/>
+    </extension>
+   <extension-point id="pydev_builder" name="Pydev Builder" schema="schema/pydev_builder.exsd"/>
+<!-- extensions -->
+<!-- extensions -->
+<!-- extensions -->
+<!-- extensions -->
+<!-- extensions -->
+<!-- extensions -->
+   <extension-point id="pydev_completion" name="Pydev completion" schema="schema/pydev_completion.exsd"/>
+   <extension-point id="pydev_modules_observer" name="Pydev modules observer" schema="schema/pydev_modules_observer.exsd"/>
+   <extension-point id="pydev_interpreter_observer" name="Pydev Interpreter Observer" schema="schema/pydev_interpreter_observer.exsd"/>
+   <extension-point id="pydev_ctrl_1" name="Pydev M11 participant" schema="schema/pydev_ctrl_1.exsd"/>
+   <extension-point id="pydev_simpleassist" name="Pydev Simple Assist" schema="schema/pydev_simpleassist.exsd"/>
+   <extension-point id="pydev_organize_imports" name="Pydev Organize Imports" schema="schema/pydev_organize_imports.exsd"/>
+   <extension-point id="pydev_refactoring" name="Pydev Refactoring" schema="schema/pydev_refactoring.exsd"/>
+   <extension-point id="pydev_quick_outline" name="Pydev Quick Outline" schema="schema/pydev_quick_outline.exsd"/>
+   <extension-point id="pydev_pyedit_listener" name="PyEdit Listener" schema="schema/pydev_pyedit_listener.exsd"/>
+   <extension-point id="pydev_formatter" name="Pydev Formatter" schema="schema/pydev_formatter.exsd"/>
+   <extension-point id="pydev_globals_browser" name="Pydev Globals Browser" schema="schema/pydev_globals_browser.exsd"/>
+   <extension-point id="pydev_debug_preferences_page" name="Pydev Debug Preferences Page" schema="schema/pydev_debug_preferences_page.exsd"/>
+   <extension-point id="pydev_pythonpath_contrib" name="Python Path Contributor" schema="schema/pydev_pythonpath_contrib.exsd"/>
+   <extension-point id="pydev_manager_observer" name="Pydev code completion manager observer" schema="schema/pydev_manager_observer.exsd"/>
+   <extension-point id="pydev_hover" name="Pydev hover" schema="schema/pydev_hover.exsd"/>
+<!-- wizards -->
+   <extension point="org.eclipse.ui.newWizards">
+      <category
+            id="org.python.pydev.PythonCategory"
+            name="Pydev"/>
+      <wizard
+            canFinishEarly="false"
+            category="org.python.pydev.PythonCategory"
+            class="org.python.pydev.ui.wizards.project.PythonProjectWizard"
+            descriptionImage="icons/python_logo.png"
+            finalPerspective="org.python.pydev.ui.PythonPerspective"
+            hasPages="true"
+            icon="icons/python_16x16.png"
+            id="org.python.pydev.ui.wizards.project.PythonProjectWizard"
+            name="Pydev Project"
+            preferredPerspectives="org.python.pydev.ui.PythonPerspective"
+            project="true"/>
+            
+      <!--
+      <wizard
+            canFinishEarly="false"
+            category="org.python.pydev.PythonCategory"
+            class="org.python.pydev.ui.wizards.gettingstarted.PythonGettingStartedWizard"
+            descriptionImage="icons/python_logo.png"
+            finalPerspective="org.python.pydev.ui.PythonPerspective"
+            hasPages="true"
+            icon="icons/mainfunction.gif"
+            id="org.python.pydev.ui.wizards.gettingstarted.PythonGettingStartedWizard"
+            name="Pydev Getting Started"
+            preferredPerspectives="org.python.pydev.ui.PythonPerspective"
+            project="true"/>
+      -->
+      <wizard
+            canFinishEarly="false"
+            category="org.python.pydev.PythonCategory"
+            class="org.python.pydev.ui.wizards.files.PythonSourceFolderWizard"
+            descriptionImage="icons/python_logo.png"
+            finalPerspective="org.python.pydev.ui.PythonPerspective"
+            hasPages="true"
+            icon="icons/packagefolder_obj.gif"
+            id="org.python.pydev.ui.wizards.files.PythonSourceFolderWizard"
+            name="Source Folder"
+            preferredPerspectives="org.python.pydev.ui.PythonPerspective"
+            project="false"/>
+      <wizard
+            canFinishEarly="false"
+            category="org.python.pydev.PythonCategory"
+            class="org.python.pydev.ui.wizards.files.PythonPackageWizard"
+            descriptionImage="icons/python_logo.png"
+            finalPerspective="org.python.pydev.ui.PythonPerspective"
+            hasPages="true"
+            icon="icons/package_obj.gif"
+            id="org.python.pydev.ui.wizards.files.PythonPackageWizard"
+            name="Pydev Package"
+            preferredPerspectives="org.python.pydev.ui.PythonPerspective"
+            project="false"/>
+      <wizard
+            canFinishEarly="false"
+            category="org.python.pydev.PythonCategory"
+            class="org.python.pydev.ui.wizards.files.PythonModuleWizard"
+            descriptionImage="icons/python_logo.png"
+            finalPerspective="org.python.pydev.ui.PythonPerspective"
+            hasPages="true"
+            icon="icons/python_file.gif"
+            id="org.python.pydev.ui.wizards.files.PythonModuleWizard"
+            name="Pydev Module"
+            preferredPerspectives="org.python.pydev.ui.PythonPerspective"
+            project="false"/>
+   </extension>
+   <extension point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.python.pydev.ui.perspective.PythonPerspectiveFactory"
+            icon="icons/python_16x16.png"
+            id="org.python.pydev.ui.PythonPerspective"
+            name="Pydev"/>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="org.python.pydev.ui.PythonPerspective">
+         <showInPart id="org.eclipse.ui.views.ResourceNavigator"/>
+         <showInPart id="org.python.pydev.navigator.view"/>
+         <showInPart id="org.eclipse.ui.views.ContentOutline"/>
+      </perspectiveExtension>
+   </extension>
+   
+   
+
+   <extension
+         id="org.python.pydev.refactoring.popupContribution"
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            id="org.python.pydev.popupContribution"
+            targetID="#PyEditContext">
+         <action
+               class="org.python.pydev.editor.actions.PyCopyQualifiedName"
+               definitionId="org.python.pydev.editor.actions.copyqualifiedname"
+               id="org.python.pydev.editor.actions.copyqualifiedname"
+               label="Copy Context Qualified Name"
+               menubarPath="copy"
+               icon="icons/cpyqual_menu.gif"/>
+      </viewerContribution>
+   </extension>
+
+
+
+<!-- ********************** Pydev Package Explorer ********************** --> 
+<!-- ********************** Pydev Package Explorer ********************** --> 
+<!-- ********************** Pydev Package Explorer ********************** --> 
+<!-- ********************** Pydev Package Explorer ********************** --> 
+
+<!-- Declare the view part to hold the default implementation --> 
+<extension point="org.eclipse.ui.views">
+   <category
+        name="Pydev"
+        id="org.python.pydev"/>
+    <view
+        allowMultiple="false"
+        category="org.python.pydev"
+        class="org.python.pydev.navigator.ui.PydevPackageExplorer"
+        id="org.python.pydev.navigator.view"
+        icon="icons/pydev_package_explorer.gif"
+        name="Pydev Package Explorer"/>
+</extension> 
+
+
+<!-- Declare the python content in the project explorer
+-->
+<extension point="org.eclipse.ui.navigator.viewer">
+    <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+        <includes>
+            <contentExtension pattern="org.python.pydev.navigator.pythoncontent"/>
+            <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.*"/> 
+            <contentExtension pattern="org.python.pydev.navigator.filters.*"/> 
+        </includes>
+    </viewerContentBinding>
+</extension>
+
+<extension point="org.eclipse.ui.navigator.viewer">
+    <viewer viewerId="org.python.pydev.navigator.view">
+    	<!-- allowsPlatformContributions="true" allows it to show the cvs stuff 
+        -->
+        <popupMenu allowsPlatformContributions="true" id="org.python.pydev.navigator.view#PopupMenu">  
+             <insertionPoint name="group.new"/>
+             <insertionPoint name="group.open" separator="true"/>
+             <insertionPoint name="group.openWith"/>   
+             <insertionPoint name="group.edit" separator="true"/>   
+             <insertionPoint name="group.reorganize" />         
+             <insertionPoint name="group.port" separator="true"/>     
+             <insertionPoint name="group.build" separator="true"/> 
+             <insertionPoint name="group.generate" separator="true"/> 
+             <insertionPoint name="group.search" separator="true"/>              
+             <insertionPoint name="additions" separator="true"/>              
+             <insertionPoint name="group.properties" separator="true"/>             
+        </popupMenu>
+    </viewer>
+    <viewerContentBinding viewerId="org.python.pydev.navigator.view">
+        <includes>
+            <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>
+            <contentExtension pattern="org.python.pydev.navigator.pythoncontent"/>
+            <contentExtension pattern="org.python.pydev.navigator.filters.*"/> 
+        </includes>
+    </viewerContentBinding>
+    <dragAssistant class="org.eclipse.ui.navigator.resources.ResourceDragAdapterAssistant" viewerId="org.python.pydev.navigator.view"/>
+</extension>
+   
+  <!-- Declare a content extension that renders the contents of a properties file -->
+  <extension point="org.eclipse.ui.navigator.navigatorContent">
+         
+      <navigatorContent 
+            id="org.python.pydev.navigator.pythoncontent" 
+            name="Pydev Navigator Content"
+            icon="icons/python_16x16.png"
+            contentProvider="org.python.pydev.navigator.PythonModelProvider"
+            labelProvider="org.python.pydev.navigator.PythonLabelProvider" 
+            activeByDefault="true"
+            priority="higher">
+         <triggerPoints>
+             <or>
+                <instanceof value="org.eclipse.core.resources.IWorkspaceRoot" />
+                <instanceof value="org.eclipse.ui.IWorkingSet"/>
+                <and>
+                   <instanceof value="org.eclipse.core.resources.IProject"/>
+                   <test
+                         forcePluginActivation="true"
+                         property="org.eclipse.core.resources.projectNature"
+                         value="org.python.pydev.pythonNature"/>
+                </and>
+                <instanceof value="org.eclipse.core.resources.IFolder"/>
+                <instanceof value="org.eclipse.core.resources.IStorage"/>
+                <instanceof value="org.eclipse.core.resources.IFile"/>
+                <instanceof value="org.eclipse.core.resources.IResource"/>
+                <instanceof value="org.python.pydev.navigator.elements.IWrappedResource"/>
+                <instanceof value="org.python.pydev.core.structure.TreeNode"/>
+                <instanceof value="org.python.pydev.navigator.elements.PythonNode"/>
+                <instanceof value="org.python.pydev.navigator.elements.ProjectConfigError"/>
+            </or>
+         </triggerPoints>
+         <possibleChildren>
+            <or>
+                <adapt type="org.eclipse.core.resources.IProject" />
+                <adapt type="org.eclipse.ui.IWorkingSet" />
+                <instanceof value="org.eclipse.core.resources.IWorkspaceRoot" />
+                <instanceof value="org.eclipse.core.resources.IFolder" />
+                <instanceof value="org.eclipse.core.resources.IStorage"/>
+                <instanceof value="org.eclipse.core.resources.IFile" />
+                <instanceof value="org.eclipse.core.resources.IResource"/>
+                <instanceof value="org.python.pydev.navigator.elements.IWrappedResource"/>
+                <instanceof value="org.python.pydev.core.structure.TreeNode"/>
+                <instanceof value="org.python.pydev.navigator.elements.PythonNode"/>
+            </or>
+         </possibleChildren>
+         <commonSorter
+               class="org.python.pydev.navigator.sorter.PythonModelSorter"
+               id="org.python.pydev.navigator.sorter.pythonmodelsorter"/>
+         <actionProvider
+               class="org.python.pydev.navigator.actions.PythonActionProvider"
+               id="org.python.pydev.navigator.actions.pythonActionProvider"
+               overrides="org.eclipse.ui.navigator.resources.actions.EditActions"/>
+         <actionProvider
+               class="org.python.pydev.navigator.actions.PythonRefactorActionProvider"
+               id="org.python.pydev.navigator.actions.pythonRefactorActionProvider"
+               overrides="org.eclipse.ui.navigator.resources.actions.RefactorActions"/>
+         <!-- that's so that we only have the python content shown, and not the resource content -->
+		 <override
+				policy="InvokeAlwaysRegardlessOfSuppressedExt"
+				suppressedExtensionId="org.eclipse.ui.navigator.resourceContent"/>
+        <dropAssistant
+              class="org.python.pydev.navigator.actions.copied.PyResourceDropAdapterAssistant"
+              id="org.python.pydev.navigator.actions.PyResourceDropAdapterAssistant">
+           <possibleDropTargets>
+              <or>
+                 <adapt type="org.eclipse.core.resources.IProject"/>
+                 <adapt type="org.eclipse.core.resources.IFolder"/>
+                 <adapt type="org.eclipse.core.resources.IFile"/>
+              </or>
+           </possibleDropTargets>
+        </dropAssistant>        
+
+
+      </navigatorContent>
+	  <commonWizard menuGroupId="org.python.pydev.ui.wizards" type="new" wizardId="org.python.pydev.ui.wizards.files.PythonPackageWizard">
+	     <enablement>
+	        <or>
+	           <adapt type="org.eclipse.core.resources.IFolder"/>
+	           <adapt type="org.eclipse.core.resources.IFile"/>
+	           <adapt type="org.eclipse.core.resources.IProject">
+	              <test
+	                    property="org.eclipse.core.resources.projectNature"
+	                    value="org.python.pydev.pythonNature"/>
+	           </adapt>
+	        </or>
+	     </enablement>
+	  </commonWizard>
+	  <commonWizard menuGroupId="org.python.pydev.ui.wizards" type="new" wizardId="org.python.pydev.ui.wizards.files.PythonModuleWizard">
+	     <enablement>
+	        <or>
+	           <adapt type="org.eclipse.core.resources.IFolder"/>
+	           <adapt type="org.eclipse.core.resources.IFile"/>
+	           <adapt type="org.eclipse.core.resources.IProject">
+	              <test
+	                    property="org.eclipse.core.resources.projectNature"
+	                    value="org.python.pydev.pythonNature"/>
+	           </adapt>
+	        </or>
+	     </enablement>
+	  </commonWizard>
+	  
+      <commonFilter activeByDefault="false" 
+	     name="Pydev: non-Pydev Projects"
+      	 description="%HideNonPydevProjects.description" 
+      	 id="org.python.pydev.navigator.filters.hideNonPydevProjects" 
+      	 class="org.python.pydev.navigator.filters.PydevProjectsFilter">
+      </commonFilter>
+      
+  	  <commonFilter activeByDefault="true" 
+	  	  name="Pydev: .pyc files" 
+	  	  description="Pydev: *.pyc files" 
+	  	  id="org.python.pydev.navigator.filters.hidePycFiles"
+	  	  class="org.python.pydev.navigator.filters.PycFilter"> 
+	  </commonFilter>		 
+	  
+  	  <commonFilter activeByDefault="true" 
+	  	  name="Pydev: .pyo files" 
+	  	  description="Pydev: *.pyo files" 
+	  	  id="org.python.pydev.navigator.filters.hidePyoFiles" 
+	  	  class="org.python.pydev.navigator.filters.PyoFilter"> 
+	  </commonFilter>		 
+
+  	  <commonFilter activeByDefault="true" 
+	  	  name="Pydev: *.py~ files" 
+	  	  description="Pydev: *.py~ files" 
+	  	  id="org.python.pydev.navigator.filters.hidePyTildaFiles" 
+	  	  class="org.python.pydev.navigator.filters.PyTildaFilter"> 
+	  </commonFilter>		 
+	  
+	  <!-- the ones below are copied from org.eclipse.ui.navigator.resources, with changes from 'instanceof' to 'adapt type'-->
+      <commonFilter activeByDefault="true" 
+	      name="Pydev: .* resources" 
+	      description="Pydev: .*resources"  
+	      id="org.python.pydev.navigator.filters.startsWithDot"
+	  	  class="org.python.pydev.navigator.filters.DotStartFilter"> 
+      </commonFilter>
+      
+      <commonFilter activeByDefault="true" 
+	      name="Pydev: .class resources" 
+	      description="Pydev: .class resources" 
+	      id="org.python.pydev.navigator.filters.endsWithClass"
+	  	  class="org.python.pydev.navigator.filters.ClassFilter"> 
+      </commonFilter> 
+      
+      
+      <commonFilter activeByDefault="false" 
+	      name="Pydev: closed projects" 
+	      description="Pydev: closed projects" 
+	      id="org.python.pydev.navigator.filters.closedProject"
+	  	  class="org.python.pydev.navigator.filters.ClosedProjectsFilter"> 
+      </commonFilter>
+      
+      <commonFilter activeByDefault="true" 
+	      name="Pydev: custom specified filters" 
+	      description="Pydev: custom specified filters" 
+	      id="org.python.pydev.navigator.filters.customFilters"
+	  	  class="org.python.pydev.navigator.filters.CustomFilters"> 
+      </commonFilter>
+      
+      
+      <commonFilter activeByDefault="false" 
+          name="Pydev: Nodes: All" 
+          description="Pydev: Nodes: (hide all)" 
+          id="org.python.pydev.navigator.filters.pythonnodefilter"
+          class="org.python.pydev.navigator.filters.PythonNodeFilter"> 
+      </commonFilter>
+      
+      <commonFilter activeByDefault="true" 
+          name="Pydev: Nodes: Imports" 
+          description="Pydev: Nodes: Imports (hide)" 
+          id="org.python.pydev.navigator.filters.Imports"
+          class="org.python.pydev.navigator.filters.ImportsFilter"> 
+      </commonFilter> 
+      
+      <commonFilter activeByDefault="false" 
+          name="Pydev: Nodes: Comments" 
+          description="Pydev: Nodes: Comments (hide)" 
+          id="org.python.pydev.navigator.filters.Comments"
+          class="org.python.pydev.navigator.filters.CommentsFilter"> 
+      </commonFilter> 
+      
+      
+      <commonFilter activeByDefault="false" 
+          name="Pydev: Interpreter Info" 
+          description="Pydev: Interpreter Info (hide)" 
+          id="org.python.pydev.navigator.filters.interpreterinfofilter"
+          class="org.python.pydev.navigator.filters.InterpreterInfoFilter"> 
+      </commonFilter> 
+      
+
+      
+      	  
+    </extension>
+
+    <!-- Bind the content extension to the viewer -->
+    <extension point="org.eclipse.ui.navigator.viewer">
+        <viewerContentBinding viewerId="org.python.pydev.navigator.view">
+            <includes>
+                <contentExtension pattern="org.python.pydev.navigator.pythoncontent"/>
+                <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>
+                <contentExtension pattern="org.python.pydev.navigator.actions.pythonLinkHelper"/>
+            </includes>
+        </viewerContentBinding>
+        <viewerActionBinding viewerId="org.python.pydev.navigator.view">
+            <includes>
+                <actionExtension pattern="org.python.pydev.navigator.actions.*"/>
+	            <actionExtension pattern="org.eclipse.ui.navigator.resources.*"/>
+            </includes>
+        </viewerActionBinding>
+    </extension>
+
+    <extension point="org.eclipse.ui.viewActions"> 
+	  <viewContribution 
+		id="org.python.pydev.navigator.actions.customFilters" 
+   		targetID="org.python.pydev.navigator.view">
+    	<action
+           class="org.python.pydev.navigator.actions.PySetupCustomFilters"
+           icon="icons/filter.gif"
+           id="org.python.pydev.navigator.actions.PySetupCustomFilters"
+           label="Setup custom filters"
+           menubarPath="additions"
+           toolbarPath="additions"
+           tooltip="Setup custom filters."> 
+  		</action> 
+      </viewContribution>
+       
+   </extension>
+
+   <!--
+   If not done we get:
+   
+   No property tester contributes a property org.eclipse.core.resources.open to 
+   type class org.python.pydev.navigator.elements.PythonProjectSourceFolder
+   -->
+   <extension point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            namespace="org.eclipse.core.resources"
+            properties="open"
+            type="org.python.pydev.navigator.elements.PythonProjectSourceFolder"
+            class="org.python.pydev.navigator.properties.PyPropertyTester"
+            id="org.python.pydev.navigator.elements.PythonProjectSourceFolder">
+      </propertyTester>
+   </extension>
+
+	<!-- the adapter factory must be registered (otherwise the CNF cannot 'get it' - even if the objects themselves are
+	adaptable).
+    -->
+    <extension point="org.eclipse.core.runtime.adapters">
+         <factory class="org.python.pydev.navigator.ModelAdapter" adaptableType="org.python.pydev.navigator.elements.IWrappedResource">
+			<adapter type="org.eclipse.core.resources.IResource"/>
+			<adapter type="org.eclipse.core.resources.IFolder"/>
+			<adapter type="org.eclipse.core.resources.IProject"/>
+			<adapter type="org.eclipse.core.resources.IContainer"/>
+			<adapter type="org.eclipse.core.resources.IFile"/>
+			<adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
+			<adapter type="org.eclipse.ui.IContributorResourceAdapter"/>
+         </factory>
+    </extension>
+    
+    <!-- linking the navigator -->
+	<extension point="org.eclipse.ui.navigator.linkHelper">
+		<linkHelper
+			class="org.python.pydev.navigator.actions.PythonLinkHelper"
+			id="org.python.pydev.navigator.actions.pythonLinkHelper">
+			<selectionEnablement>
+				<or>
+					<adapt type="org.eclipse.core.resources.IFile"/>
+				</or>
+			</selectionEnablement>
+			<editorInputEnablement>
+				<!-- Not using org.eclipse.ui.IFileEditorInput so that we can match the CompareEditorInput -->
+				<instanceof value="org.eclipse.ui.IEditorInput"/>
+			</editorInputEnablement>
+		</linkHelper>
+	</extension>
+	
+	<!-- hyperlink: added on 3.3. see also: PyEditConfiguration.getHyperlinkDetectorTargets -->
+   <extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
+      <target id="org.python.pydev.editor.PythonEditor" name="Pydev Editor">
+          <context type="org.eclipse.ui.texteditor.ITextEditor"/>
+      </target>
+   </extension>
+   
+   <extension point="org.python.pydev.pydev_pyedit_listener">
+  		<pyedit_listener_participant class="org.python.pydev.builder.syntaxchecker.ClearSyntaxMarkersPyeditListener"/>
+   </extension>
+   
+   <extension point="org.python.pydev.pydev_pyedit_listener">
+  		<pyedit_listener_participant class="org.python.pydev.plugin.nature.PyNatureReindexer"/>
+   </extension>
+
+
+<extension
+	point="org.eclipse.compare.contentMergeViewers">
+	<viewer
+		extensions="py,pyw"
+		class="org.python.pydev.compare.PyContentViewerCreator"
+		id="org.python.pydev.compare.PyContentViewerCreator">
+	</viewer>
+	<contentTypeBinding
+		contentTypeId="org.python.pydev.pythonfile"
+		contentMergeViewerId="org.python.pydev.compare.PyContentViewerCreator">
+	</contentTypeBinding>
+</extension>
+	
+ </plugin>

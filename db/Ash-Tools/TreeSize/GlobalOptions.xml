@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalOptions Version="2" AppVersion="2.4" Type="TGlobalOptions">
+	<Tag>0</Tag>
+	<ThreadPriority>2</ThreadPriority>
+	<PrinterName>Microsoft XPS Document Writer</PrinterName>
+	<PrinterOrientation>0</PrinterOrientation>
+	<MaximumThreads>2</MaximumThreads>
+	<Decimals>1</Decimals>
+	<ShowLongTooltips>True</ShowLongTooltips>
+	<ShowInidcatorBarsInTree>True</ShowInidcatorBarsInTree>
+	<IndicatorBarColor1>13432063</IndicatorBarColor1>
+	<IndicatorBarColor2>52479</IndicatorBarColor2>
+	<ViewType>3</ViewType>
+	<RecentlyScanned Type="TJamPathList">
+		<String0>C:\</String0>
+		<String1>D:\</String1>
+	</RecentlyScanned>
+	<MRUMaximum>12</MRUMaximum>
+	<SortType>1</SortType>
+	<SizeUnit>2</SizeUnit>
+	<ShowErrors>False</ShowErrors>
+	<IndentSizeIndicators>True</IndentSizeIndicators>
+	<GridLinesInDirectoryTree>False</GridLinesInDirectoryTree>
+</GlobalOptions>

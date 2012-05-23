@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.jst.server_ui.feature"
+      label="%featureName"
+      version="3.1.1.v20090817-7A2FBb9xFaHovXGLUCTMQ2355"
+      provider-name="%providerName">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
+   </url>
+
+   <includes
+         id="org.eclipse.jst.server_userdoc.feature"
+         version="3.1.0.v200903071919-2-DF7w311916261244"/>
+
+   <includes
+         id="org.eclipse.jst.server_core.feature"
+         version="3.1.2.v20100127-31Ev8s734C3C6H"/>
+
+   <plugin
+         id="org.eclipse.jst.server.ui"
+         download-size="0"
+         install-size="0"
+         version="1.1.0.v20090421"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jst.server.generic.ui"
+         download-size="0"
+         install-size="0"
+         version="1.0.405.v200905022002"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jst.server.ui.infopop"
+         download-size="0"
+         install-size="0"
+         version="1.0.400.v200805140145"
+         unpack="false"/>
+
+</feature>

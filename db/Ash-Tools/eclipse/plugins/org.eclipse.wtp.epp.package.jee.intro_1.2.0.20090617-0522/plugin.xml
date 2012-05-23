@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ 
+   <extension
+         point="org.eclipse.ui.intro">
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            icon="icons/wtp_icon_x16.gif"
+            id="org.eclipse.wtp.epp.package.jee.intro">
+      </intro>
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            id="org.eclipse.wtp.epp.package.jee.intro.intro">
+      </intro>
+      <introProductBinding
+            introId="org.eclipse.wtp.epp.package.jee.intro.intro"
+            productId="org.eclipse.epp.package.jee.product">
+      </introProductBinding>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.intro.config">
+      <config
+            introId="org.eclipse.wtp.epp.package.jee.intro"
+            content="introContent.xml"
+            id="org.eclipse.javaee.configId">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  kind="html"
+                  os="win32,linux,macosx">
+            </implementation>
+         </presentation>
+      </config>
+      <config
+            content="introContent.xml"
+            id="org.eclipse.wtp.epp.package.jee.intro.introConfigId"
+            introId="org.eclipse.wtp.epp.package.jee.intro.intro">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  kind="html"
+                  os="win32,linux,macosx"
+                  style="content/shared.css">
+            </implementation>
+         </presentation>
+      </config>
+   </extension>
+</plugin>

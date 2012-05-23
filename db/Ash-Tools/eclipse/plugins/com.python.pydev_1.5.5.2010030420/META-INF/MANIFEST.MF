@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-Name: Pydev Extensions
+Bundle-ClassPath: pydev.jar,retroweaver-rt.jar,mail.jar,activation.jar
+Bundle-Activator: com.python.pydev.PydevPlugin
+Bundle-Vendor: Aptana
+Bundle-ManifestVersion: 2
+Bundle-Localization: plugin
+Bundle-SymbolicName: com.python.pydev; singleton:=true
+Export-Package: com.python.pydev,com.python.pydev.actions,com.python.p
+ ydev.refactoring,com.python.pydev.ui.hierarchy,com.python.pydev.ui.se
+ arch,com.python.pydev.util
+Require-Bundle: org.eclipse.ui,org.eclipse.core.runtime,org.eclipse.jf
+ ace.text,org.python.pydev;bundle-version="1.5.5.2010030420",org.pytho
+ n.pydev.core,org.junit;bundle-version="[3.8.0,3.9.9]";resolution:=opt
+ ional,org.python.pydev.ast,org.python.pydev.parser,org.eclipse.ui.edi
+ tors,org.eclipse.ui.workbench.texteditor,org.eclipse.core.resources,o
+ rg.eclipse.core.variables,org.eclipse.debug.core,org.eclipse.debug.ui
+ ,org.python.pydev.debug,org.eclipse.ui.console,org.python.pydev.jytho
+ n,org.eclipse.search,org.eclipse.ui.ide
+Bundle-Version: 1.5.5.2010030420
+Eclipse-LazyStart: true
+
+

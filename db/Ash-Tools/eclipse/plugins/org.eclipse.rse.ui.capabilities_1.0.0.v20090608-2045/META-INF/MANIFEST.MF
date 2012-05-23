@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.1
+Created-By: 2.3 (IBM Corporation)
+Bundle-SymbolicName: org.eclipse.rse.ui.capabilities;singleton:=true
+Bundle-ManifestVersion: 2
+Bundle-Localization: plugin
+Bundle-Name: %bundleName
+Bundle-Version: 1.0.0.v20090608-2045
+Bundle-Vendor: %providerName
+

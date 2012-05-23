@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- contextQualifierLength=13 -->
+<feature
+      id="org.eclipse.epp.package.jee.feature"
+      label="%featureName"
+      version="1.2.2.20100217-2310"
+      provider-name="%providerName"
+      plugin="org.eclipse.epp.package.jee">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <discovery label="%discoverySiteName" url="http://download.eclipse.org/releases/galileo/"/>
+   </url>
+
+   <includes
+         id="org.eclipse.platform"
+         version="3.5.2.R35x_v20100210-0800-9hEiFzmFst-TiEn9hNYgDWg1XN8ulH_JvCNGB"
+         search-location="both"/>
+
+   <requires>
+      <import feature="org.eclipse.cvs"/>
+      <import feature="org.eclipse.help"/>
+      <import feature="org.eclipse.jdt"/>
+      <import feature="org.eclipse.platform"/>
+      <import feature="org.eclipse.mylyn.ide_feature"/>
+      <import feature="org.eclipse.mylyn.java_feature"/>
+      <import feature="org.eclipse.mylyn.bugzilla_feature"/>
+      <import feature="org.eclipse.mylyn.context_feature"/>
+      <import feature="org.eclipse.mylyn_feature"/>
+      <import feature="org.eclipse.mylyn.wikitext_feature"/>
+      <import feature="org.eclipse.epp.usagedata.feature"/>
+      <import feature="org.eclipse.rse"/>
+      <import feature="org.eclipse.rse.useractions"/>
+      <import feature="org.eclipse.tm.terminal"/>
+      <import feature="org.eclipse.tm.terminal.ssh"/>
+      <import feature="org.eclipse.tm.terminal.telnet"/>
+      <import feature="org.eclipse.tm.terminal.view"/>
+      <import feature="org.eclipse.datatools.modelbase.feature"/>
+      <import feature="org.eclipse.datatools.connectivity.feature"/>
+      <import feature="org.eclipse.datatools.sqldevtools.feature"/>
+      <import feature="org.eclipse.datatools.intro"/>
+      <import feature="org.eclipse.datatools.doc.user"/>
+      <import feature="org.eclipse.datatools.common.doc.user"/>
+      <import feature="org.eclipse.datatools.connectivity.doc.user"/>
+      <import feature="org.eclipse.datatools.sqltools.doc.user"/>
+      <import feature="org.eclipse.datatools.enablement.feature"/>
+      <import feature="org.eclipse.wst.common.fproj"/>
+      <import feature="org.eclipse.wst.jsdt.feature"/>
+      <import feature="org.eclipse.wst.xml_ui.feature"/>
+      <import feature="org.eclipse.wst.web_ui.feature"/>
+      <import feature="org.eclipse.wst.server_adapters.feature"/>
+      <import feature="org.eclipse.wst.xsl.feature"/>
+      <import feature="org.eclipse.jst.common.fproj.enablement.jdt"/>
+      <import feature="org.eclipse.jst.server_ui.feature"/>
+      <import feature="org.eclipse.jst.server_adapters.feature"/>
+      <import feature="org.eclipse.jst.server_adapters.ext.feature"/>
+      <import feature="org.eclipse.jst.web_ui.feature"/>
+      <import feature="org.eclipse.jst.enterprise_ui.feature"/>
+      <import feature="org.eclipse.jst.webpageeditor.feature"/>
+      <import feature="org.eclipse.jst.jsf.apache.trinidad.tagsupport.feature"/>
+      <import feature="org.eclipse.jst.ws.axis2tools.feature"/>
+      <import feature="org.eclipse.jpt.feature"/>
+      <import feature="org.eclipse.jst.ws.axis2tools.feature"/>
+      <import feature="org.eclipse.jpt.eclipselink.feature"/>
+      <import feature="org.eclipse.jst.webpageeditor.feature"/>
+      <import feature="org.eclipse.jst.jsf.apache.trinidad.tagsupport.feature"/>
+      <import feature="org.eclipse.persistence.jpa"/>
+      <import feature="org.eclipse.persistence.moxy"/>
+      <import feature="org.eclipse.persistence.sdo"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.epp.package.jee"
+         download-size="0"
+         install-size="0"
+         version="1.2.2.20100122-1337"/>
+
+   <plugin
+         id="org.eclipse.wtp.epp.package.jee.intro"
+         download-size="0"
+         install-size="0"
+         version="1.2.0.20090617-0522"/>
+
+   <plugin
+         id="org.eclipse.wtp.epp.package.capabilities"
+         download-size="0"
+         install-size="0"
+         version="1.2.0.20090619-1417"/>
+
+   <plugin
+         id="org.eclipse.wtp.javascript.capabilities"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v200906072300"/>
+
+   <plugin
+         id="org.eclipse.wtp.jee.capabilities"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v200906072300"/>
+
+   <plugin
+         id="org.eclipse.wtp.web.capabilities"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v200906072300"/>
+
+   <plugin
+         id="org.eclipse.wtp.xml.capabilities"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v200906072300"/>
+
+   <plugin
+         id="org.eclipse.datatools.capabilities"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v20090611-0411"/>
+
+   <plugin
+         id="org.eclipse.rse.ui.capabilities"
+         download-size="0"
+         install-size="0"
+         version="1.0.0.v20090608-2045"/>
+
+   <plugin
+         id="org.eclipse.mylyn.ide.capabilities"
+         download-size="0"
+         install-size="0"
+         version="3.2.0.v20100217-2310"/>
+
+</feature>

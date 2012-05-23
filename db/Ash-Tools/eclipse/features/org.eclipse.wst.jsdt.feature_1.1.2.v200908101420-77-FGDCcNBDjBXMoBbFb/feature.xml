@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.wst.jsdt.feature"
+      label="%featureName"
+      version="1.1.2.v200908101420-77-FGDCcNBDjBXMoBbFb"
+      provider-name="%providerName"
+      plugin="org.eclipse.wst.jsdt.ui">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
+   </url>
+
+   <plugin
+         id="org.eclipse.wst.jsdt.core"
+         download-size="0"
+         install-size="0"
+         version="1.0.201.v2010012803"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.jsdt.manipulation"
+         download-size="0"
+         install-size="0"
+         version="1.0.100.v200809240707"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.jsdt.ui"
+         download-size="0"
+         install-size="0"
+         version="1.0.201.v2010012803"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.jsdt.support.firefox"
+         download-size="0"
+         install-size="0"
+         version="1.0.200.v200904290357"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.jsdt.support.ie"
+         download-size="0"
+         install-size="0"
+         version="1.0.200.v200904290539"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.jsdt.doc"
+         download-size="0"
+         install-size="0"
+         version="1.0.200.v200903120608"
+         unpack="false"/>
+
+</feature>
