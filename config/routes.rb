@@ -1,5 +1,6 @@
 Meet4lunch::Application.routes.draw do
-  get "users/new"
+  resources :users
+ # get "users/new"
 
   root to: 'meet_static_pages#home'
 
