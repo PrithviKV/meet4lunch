@@ -10,10 +10,10 @@ describe "Static pages" do
     
   end
 
-  describe "Help page" do
+  describe "Charts page" do
     before{ visit help_path }
-    it { should have_selector('h1',    text: 'Help') }
-    it { should have_selector('title', text: full_title('Help')) }
+    it { should have_selector('h1',    text: 'Charts') }
+    it { should have_selector('title', text: full_title('Charts')) }
  
   end
 

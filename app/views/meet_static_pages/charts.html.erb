@@ -1,0 +1,37 @@
+
+
+<% provide(:title, 'Charts') %>
+<!DOCTYPE html>
+<html>
+  <head>
+   <title> Meet4Lunch | <%= yield(:title) %></title>
+  </head>
+  <body>
+    <h1> Charts </h1>
+    <p>
+	<% require 'gchart' %>
+
+    <img src="<%=Gchart.line(:data => [300, 100, 30, 200, 100, 200, 300, 10], :axis_with_labels => 'x',
+            :axis_labels => ['Jan|July|Jan|July|Jan'])%>"/>  </p>
+
+   <p>  <img src="<%=Gchart.bar(:title => "Matt's Mojo", 
+           :data => [15, 30, 10, 20, 100, 20, 40, 100, 90, 100, 80],
+           :bar_colors => '76A4FB',
+           :background => 'EEEEEE', :chart_background => 'CCCCCC')%>"/>
+	  
+    </p>
+	
+	<p>
+	
+	 <img src="<%=Gchart.pie_3d(:title => 'ruby_fu', :size => '400x200',
+              :data => [10, 45, 45], :labels => ["DHH", "Rob", "Matt"] )%>"/>
+	</p>
+	
+	<p>
+	
+	 <img src="<%=Gchart.line(:data => [300, 100, 30, 200, 100, 200, 300, 10], :axis_with_labels => 'x,r',
+            :axis_labels => [['Jan','July','Jan','July','Jan'], ['2005','2006','2007']])%>"/>
+	</p>
+	
+   </body>
+</html>

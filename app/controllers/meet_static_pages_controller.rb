@@ -2,7 +2,8 @@ class MeetStaticPagesController < ApplicationController
   def home
   end
 
-  def help
+  def charts
+    
   end
   
   def about

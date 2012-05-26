@@ -11,12 +11,20 @@ $grayMediumLight: #eaeaea;
 }
 /* universal */
 
+.hero-unit {
+ 
+  background-image: url('lunch.jpg');
+ 
+  }
+
 html {
   overflow-y: scroll;
 }
 
 body {
   padding-top: 60px;
+ 
+ 
 }
 
 section {
@@ -44,7 +52,8 @@ h1 {
   font-size: 3em;
   letter-spacing: -2px;
   margin-bottom: 30px;
-  text-align: center;
+  text-align: left;
+  color: #000;
 }
 
 h2 {
@@ -53,7 +62,7 @@ h2 {
   margin-bottom: 30px;
   text-align: center;
   font-weight: normal;
-  color: #999;
+  color: #fff;
 }
 
 p {

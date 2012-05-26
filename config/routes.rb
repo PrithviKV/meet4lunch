@@ -10,7 +10,7 @@ Meet4lunch::Application.routes.draw do
  # get 'meet_static_pages/help'
  # get 'meet_static_pages/about'
  # get 'meet_static_pages/contact'
-  match '/help',  to: 'meet_static_pages#help'
+  match '/charts',  to: 'meet_static_pages#charts'
    match '/about',  to: 'meet_static_pages#about'
     match '/contact',  to: 'meet_static_pages#contact'
    

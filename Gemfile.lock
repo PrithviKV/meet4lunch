@@ -60,6 +60,7 @@ GEM
       factory_girl (~> 2.3.0)
       railties (>= 3.0.0)
     ffi (1.0.11)
+    googlecharts (1.6.8)
     hike (1.2.1)
     i18n (0.6.0)
     journey (1.0.3)
@@ -155,6 +156,7 @@ DEPENDENCIES
   capybara (= 1.1.2)
   coffee-rails (~> 3.2.2)
   factory_girl_rails (= 1.4.0)
+  googlecharts
   jquery-rails (= 2.0.0)
   pg (= 0.12.2)
   rails (= 3.2.3)
